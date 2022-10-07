@@ -10,9 +10,9 @@ with uproot.open("Plane_Wave_Datasets/ts1.root") as f:
     x = [float(n) for n in f["x_data"].split()]
     y = [float(n) for n in f["y_data"].split()]
     z = [float(n) for n in f["z_data"].split()]
-    kx = f["kx"]
-    ky = f["ky"]
-    kz = f["kz"]
+    kx = float(f["kx"])
+    ky = float(f["ky"])
+    kz = float(f["kz"])
 
 
 X = np.fft.fft(x)
@@ -51,6 +51,14 @@ b = XZ[m].imag.real
 c = YZ[m].imag.real
 mag = math.pow(a*a + b*b + c*c , .5)
 
-print(c/mag)
-print(-1*b/mag)
-print(a/mag)
+
+Kx = c/mag
+Ky = -1*b/mag
+Kz = a/mag
+
+Erx = 100*(Kx - kx)/kx
+Ery = 100*(Ky - ky)/ky
+Erz = 100*(Kz - kz)/kz
+
+print(Kx,Ky,Kz)
+print(Erx, Ery, Erz)
