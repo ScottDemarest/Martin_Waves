@@ -3,8 +3,6 @@ import uproot
 import matplotlib.pyplot as plt
 import math
 
-#fd = np.linspace(0, 10, 10)
-
 
 with uproot.open("Plane_Wave_Datasets/ts1.root") as f:
     x = [float(n) for n in f["x_data"].split()]
