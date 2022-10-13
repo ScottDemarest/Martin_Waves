@@ -9,6 +9,7 @@ import numpy
 
 ts_length = 10 # seconds
 samp_rate = 100 # sampling rate
+noise_scale = 1
 amp_x = 1
 amp_y = 1
 
@@ -26,7 +27,7 @@ T = numpy.empty(1)
 
 def wave_generator(t: Double, w: Double, phi: Double) -> Complex:
     i = 1j
-    return cmath.exp(i*(w*t - phi))
+    return cmath.exp(i*(w*t - phi))*noise_scale*numpy.random.normal(0, .01)
 
 
 

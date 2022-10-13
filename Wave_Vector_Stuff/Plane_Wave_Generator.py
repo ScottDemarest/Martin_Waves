@@ -3,12 +3,13 @@ from tokenize import Double
 import matplotlib.pyplot as plt
 from scipy.spatial.transform import Rotation as R
 import uproot
+import numpy
 
 ts_length = 1 # seconds
 samp_rate = 10000 # sampling rate
 amp_x = 1
 amp_y = 1
-
+noise = .1
 theta_1 = -45
 theta_2 = 75
 theta_3 = 8
@@ -26,7 +27,7 @@ Z = []
 
 
 def wave_generator(t: Double, w: Double, phi: Double, s: Double) -> Double:
-    return float(math.cos(w*t - phi - s))
+    return float(math.cos(w*t - phi - s)) + numpy.random.normal(0, noise)
 
 
 
