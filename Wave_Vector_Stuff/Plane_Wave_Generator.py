@@ -5,16 +5,16 @@ from scipy.spatial.transform import Rotation as R
 import uproot
 import numpy
 
-ts_length = 1 # seconds
-samp_rate = 10000 # sampling rate
+ts_length = 7200 # seconds
+samp_rate = 1 # sampling rate
 amp_x = 1
 amp_y = 1
-noise = .1
+noise = 0
 theta_1 = -45
 theta_2 = 75
 theta_3 = 8
 
-ang_freq = 2*math.pi*4
+ang_freq = 2*math.pi*(1/1000)
 relative_phase_shift = math.pi/2
 absolute_phase_shift = 0
 

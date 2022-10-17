@@ -28,14 +28,8 @@ Zr = [item.real for item in Z]
 plt.plot(np.absolute(X))
 plt.savefig('Plane_Wave_Datasets/fft.png', bbox_inches='tight')
 
-#print(np.amax(np.absolute(X)))
-#print(np.amax(np.absolute(Y)))
-#print(np.amax(np.absolute(Z)))
-#print(np.argmax(Xr))
 
-print(kx)
-print(ky)
-print(kz)
+print(kx,ky,kz)
 
 #assert np.argmax(Xr) == np.argmax(Yr) and np.argmax(Xr) == np.argmax(Zr)
 m = np.argmax(Xr)
