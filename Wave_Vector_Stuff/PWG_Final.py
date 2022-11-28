@@ -5,6 +5,7 @@ from scipy.spatial.transform import Rotation as R
 import uproot
 import numpy
 import numpy.random as rand
+from scipy import signal
 
 # Works by generating a signal plane wave and adding random noise
 
@@ -30,12 +31,13 @@ Z = []
 
 
 sigs = []
-for i in range(0,10):
-    sigs.append([rand.ranf()*noise, 2*math.pi*.01*rand.ranf(), 2*math.pi*rand.ranf()])
+for i in range(0,50):
+    sigs.append([rand.ranf()*noise, 2*math.pi*samp_rate*.005*rand.ranf(), 2*math.pi*rand.ranf()])
 #sigs = []
 
 def wave_generator(t: Double, w: Double, phi: Double, s: Double) -> Double:
-    x = math.cos(w*t - phi - s)
+    #x = signal.gausspulse(w*(t-ts_length/2) - phi, fc=20) 
+    x = math.cos(w*t - phi - s) 
     for i in sigs:
         x = x + i[0]*math.cos(i[1]*t - i[2])
 

@@ -15,17 +15,42 @@ with uproot.open("Plane_Wave_Datasets/ts1.root") as f:
     samp_rate = int(f["sampling_rate"])
     T = int(f["timeseries_length"])
 
+print("starting")
 
-w = 6.
+w = 40.
 
-freq = np.linspace(.0001, samp_rate/2, len(x))
+freq = np.linspace(.00001, .01*samp_rate/2, 100)
 
 widths = w*samp_rate / (2*freq*np.pi)
-t = np.linspace(0, T-1,len(x), retstep=True)
+t = np.linspace(0, T-1,num=T-1, retstep=True)[0]
 cwtm = signal.cwt(x, signal.morlet2, widths, w=w)
+
 plt.pcolormesh(t, freq, np.abs(cwtm), cmap='viridis', shading='gouraud')
-plt.savefig('Plane_Wave_Datasets/Wavelet_Test1.png', bbox_inches='tight')
-plt.show()
+plt.savefig('Plane_Wave_Datasets/Wavelet_Test_X.png', bbox_inches='tight')
+#plt.show()
+print("x done")
+cwtm = signal.cwt(y, signal.morlet2, widths, w=w)
+
+plt.pcolormesh(t, freq, np.abs(cwtm), cmap='viridis', shading='gouraud')
+plt.savefig('Plane_Wave_Datasets/Wavelet_Test_Y.png', bbox_inches='tight')
+#plt.show()
+print("y done")
+cwtm = signal.cwt(z, signal.morlet2, widths, w=w)
+
+plt.pcolormesh(t, freq, np.abs(cwtm), cmap='viridis', shading='gouraud')
+plt.savefig('Plane_Wave_Datasets/Wavelet_Test_Z.png', bbox_inches='tight')
+#plt.show()
+print("z done")
+
+
+
+XY = np.multiply(x, np.conjugate(y))
+XZ = np.multiply(x, np.conjugate(z))
+YZ = np.multiply(y, np.conjugate(z))
+
+print(len(XY),len(XY[0])) # TODO: Elementwise Multiplication
+
+print("done")
 
 
 """

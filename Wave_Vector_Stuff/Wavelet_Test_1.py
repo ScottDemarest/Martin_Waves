@@ -23,7 +23,7 @@ t, dt = np.linspace(0, 1, 200, retstep=True)
 
 fs = 1/dt
 
-w = 2.
+w = 20.
 
 #sig = np.cos(2*np.pi*10*t) + np.cos(2*np.pi*40*t)+5*signal.gausspulse(t - 0.5, fc=20)
 sig = 5*signal.gausspulse(t - 0.5, fc=20)
