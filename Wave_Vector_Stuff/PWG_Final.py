@@ -6,6 +6,7 @@ import uproot
 import numpy
 import numpy.random as rand
 from scipy import signal
+import numpy as np
 
 # Works by generating a signal plane wave and adding random noise
 
@@ -13,10 +14,10 @@ ts_length = 7200 # seconds
 samp_rate = 1 # sampling rate
 amp_x = 1
 amp_y = 1
-noise = .2
+noise = .3
 theta_1 = -45
 theta_2 = 75
-theta_3 = 8
+theta_3 = 155
 
 ang_freq = 2*math.pi*(1/1000)
 relative_phase_shift = math.pi/2
@@ -30,14 +31,17 @@ Y = []
 Z = []
 
 
-sigs = []
-for i in range(0,50):
-    sigs.append([rand.ranf()*noise, 2*math.pi*samp_rate*.005*rand.ranf(), 2*math.pi*rand.ranf()])
-#sigs = []
+def noise_generator():
+    sigs = []
+    for i in range(0,10):
+            sigs.append([rand.ranf()*noise, 2*math.pi*samp_rate*.01*rand.ranf(), 2*math.pi*rand.ranf()])
+    #sigs = []
+    return sigs
 
-def wave_generator(t: Double, w: Double, phi: Double, s: Double) -> Double:
+def wave_generator(t: Double, w: Double, phi: Double, s: Double, sigs: list) -> Double:
     #x = signal.gausspulse(w*(t-ts_length/2) - phi, fc=20) 
-    x = math.cos(w*t - phi - s) 
+    x = math.cos(w*t - phi - s)
+    
     for i in sigs:
         x = x + i[0]*math.cos(i[1]*t - i[2])
 
@@ -50,10 +54,14 @@ def wave_generator(t: Double, w: Double, phi: Double, s: Double) -> Double:
 r = R.from_euler('zxz', [theta_1, theta_2, theta_3], degrees=True)
 k = r.apply(k)
 
+s1 = noise_generator()
+s2 = noise_generator()
+s3 = noise_generator()
+
 for i in range(0, ts_length*samp_rate - 1):
-    x = amp_x*wave_generator(i/samp_rate, ang_freq, 0, absolute_phase_shift)
-    y = amp_y*wave_generator(i/samp_rate, ang_freq, relative_phase_shift, absolute_phase_shift)
-    z = wave_generator(i/samp_rate, 0, 0, math.pi/2)
+    x = amp_x*wave_generator(i/samp_rate, ang_freq, 0, absolute_phase_shift, s1)
+    y = amp_y*wave_generator(i/samp_rate, ang_freq, relative_phase_shift, absolute_phase_shift, s2)
+    z = wave_generator(i/samp_rate, 0, 0, math.pi/2, s3)
     f = [x, y, z]
     f = r.apply(f)
     X.append(f[0])
@@ -65,7 +73,10 @@ plt.plot(T, X)
 plt.plot(T, Y)
 plt.plot(T, Z)
 
-plt.savefig('Plane_Wave_Datasets/foo.png', bbox_inches='tight')
+plt.savefig('Plane_Wave_Datasets/foo.png', bbox_inches='tight',dpi=300)
+
+
+freq = np.linspace(.00001, .02*samp_rate/2, 100)
 
 with uproot.recreate("Plane_Wave_Datasets/ts1.root", compression = None) as f:
     f["x_data"] = " ".join(str(x) for x in X)
@@ -84,6 +95,7 @@ with uproot.recreate("Plane_Wave_Datasets/ts1.root", compression = None) as f:
     f["kx"] = str(k[0])
     f["ky"] = str(k[1])
     f["kz"] = str(k[2])
+    f["freq"] = {"deets":freq}
 
 """
 with uproot.open("Plane_Wave_Datasets/ts1.root") as f:
