@@ -18,8 +18,8 @@ with uproot.open("Plane_Wave_Datasets/Simulated_Data.root") as f:
 
 
 print("starting")
-
-w = 6.
+# how do widths effect accuracy?
+w = 40.
 
 freq = np.linspace(.00001, .02*samp_rate/2, 100)
 

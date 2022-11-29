@@ -5,7 +5,7 @@ import math
 from scipy import signal
 
 
-with uproot.open("Plane_Wave_Datasets/Simulated_Results_Wide_6.root") as f:
+with uproot.open("Plane_Wave_Datasets/Simulated_Results_Wide_40.root") as f:
     kx = f["wave_vector_results"]["kx"].array()
     ky = f["wave_vector_results"]["ky"].array()
     kz = f["wave_vector_results"]["kz"].array()
@@ -20,6 +20,10 @@ fig, ax = plt.subplots()
 plt.plot(kx[freq_row,:])
 plt.plot(ky[freq_row,:])
 plt.plot(kz[freq_row,:])
+plt.plot(np.multiply(Kx,np.ones(len(kx[freq_row,:]))))
+plt.plot(np.multiply(Ky,np.ones(len(ky[freq_row,:]))))
+plt.plot(np.multiply(Kz,np.ones(len(kz[freq_row,:]))))
+
 plt.xlabel("Time (s)")
 plt.ylabel("Magnitude")
 plt.title("Wave Vectors")
@@ -33,9 +37,15 @@ kz = np.average(kz[freq_row,:])
 #print(kx*kx+ky*ky+kz*kz)
 print(kx,ky,kz)
 print(Kx,Ky,Kz)
-Erx = Kx-kx
-Ery = Ky-ky
-Erz = Kz-kz
+#Erx = Kx-kx
+#Ery = Ky-ky
+#Erz = Kz-kz
+
+Erx = 100*(Kx-kx)/Kx
+Ery = 100*(Ky-ky)/Ky
+Erz = 100*(Kz-kz)/Kz
+
+
 
 print(Erx,Ery,Erz)
 

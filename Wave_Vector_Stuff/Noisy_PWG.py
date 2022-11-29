@@ -10,14 +10,17 @@ import numpy as np
 
 # Works by generating a signal plane wave and adding random noise
 
+SNR = 4
+
+
 ts_length = 7200 # seconds
 samp_rate = 1 # sampling rate
 amp_x = 1
 amp_y = 1
-noise = .3
-theta_1 = 120
-theta_2 = 0
-theta_3 = 0
+noise = 1/SNR
+theta_1 = 70
+theta_2 = -100
+theta_3 = 70
 
 frequency = 1/1000
 ang_freq = 2*math.pi*frequency
@@ -36,15 +39,17 @@ def noise_generator():
     sigs = []
     for i in range(0,10):
             sigs.append([rand.ranf()*noise, 2*math.pi*samp_rate*.01*rand.ranf(), 2*math.pi*rand.ranf()])
+            #sigs.append([rand.ranf()*noise, samp_rate*.5*rand.ranf(), ts_length*rand.ranf()])
     #sigs = []
     return sigs
 
 def wave_generator(t: Double, w: Double, phi: Double, s: Double, sigs: list) -> Double:
-    #x = signal.gausspulse(w*(t-ts_length/2) - phi, fc=20) 
+    #x = signal.gausspulse(t-ts_length/2 - phi/(2*np.pi), fc=.001, bw = .4) 
     x = math.cos(w*t - phi - s)
     
     for i in sigs:
         x = x + i[0]*math.cos(i[1]*t - i[2])
+        #x = x + i[0]*signal.gausspulse(t- i[2], fc=i[1], bw = .1)
 
     return float(x)
 
@@ -75,6 +80,7 @@ plt.plot(T, Y)
 plt.plot(T, Z)
 plt.xlabel("Time (s)")
 plt.ylabel("Magnitude")
+plt.legend(["x","y","z"])
 plt.title("Simulated Data: "+str(frequency)+" Hz Signal")
 plt.savefig('Plane_Wave_Datasets/Simulated_Data.png', bbox_inches='tight',dpi=300)
 
